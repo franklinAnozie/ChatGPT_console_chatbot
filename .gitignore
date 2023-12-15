@@ -1,3 +1,6 @@
 venv/
 console.py
 install.sh
+__pycache__
+*.json
+*.env

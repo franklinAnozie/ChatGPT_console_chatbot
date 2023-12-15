@@ -3,6 +3,7 @@ import cmd
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
+import models
 
 load_dotenv()
 
@@ -27,11 +28,20 @@ class Console(cmd.Cmd):
         self.__messages.append({"role": "assistant", "content": reply})
         print(reply)
     
+    def do_continue(self, line):
+        for key, value in models.storage.all().items():
+            self.__messages.append(value)
+        line = f"ask can we continue from where we stopped?"
+        cmd.Cmd.onecmd(self, line)
+    
     def do_clear(self, line):
         os.system('cls')
         return True
     
     def do_quit(self, line):
+        for messages in self.__messages:
+            models.storage.new(messages)
+            models.storage.save()
         return True
 
 
